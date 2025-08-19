@@ -1,6 +1,4 @@
 package com.helpers;
-
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -15,15 +13,17 @@ public class ConnectionUtility {
         try {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection(url, username, password);
-            System.out.println("Connection successful");
+            System.out.println("Postgres Connection successful");
         }
         catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
             StackTraceElement[] trace = e.getStackTrace();
             for (StackTraceElement element : trace) {
                 System.out.println("Exception at : "+element);
             }
         }
         catch(Exception e) {
+            System.out.println(e.getMessage());
             StackTraceElement[] trace = e.getStackTrace();
             for (StackTraceElement element : trace) {
                 System.out.println("Exception at : "+element);
