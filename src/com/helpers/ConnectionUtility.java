@@ -1,5 +1,6 @@
 package com.helpers;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -7,7 +8,7 @@ public class ConnectionUtility {
 
     private final static String url="jdbc:postgresql://localhost:5432/URLShortner";
     private final static String username="postgres";
-    private final static String password="postgres";
+    private final static String password="8005713197";
     static Connection conn = null;
 
     public static Connection getConnection() {

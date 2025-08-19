@@ -4,7 +4,6 @@ import com.beans.URLMapping;
 import com.exception.URLNotFoundException;
 import com.helpers.Base62Encoder;
 import com.helpers.ConnectionUtility;
-import com.repository.URLRepository;
 import com.services.IURLService;
 
 import java.sql.*;
@@ -21,14 +20,14 @@ public class URLServiceImpl implements IURLService {
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, longURL);
-            int afftedRows = pstmt.executeUpdate();
-            if (afftedRows == 0) {
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows == 0) {
                 throw new SQLException("Creating short url failed, no row inerted");
             }
 
             ResultSet rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
-                int urlId = rs.getInt("url_id");
+                int urlId = rs.getInt(1);
                 shortURL = Base62Encoder.encode(urlId);
                 updateShortUrlByID(shortURL, urlId);
             }
@@ -37,12 +36,13 @@ public class URLServiceImpl implements IURLService {
             }
         }
         catch (SQLException e) {
+            System.out.println(e.getMessage());
             StackTraceElement[] trace = e.getStackTrace();
             for (StackTraceElement element : trace) {
                 System.out.println("Exception at : " +  element);
             }
         }
-        return "/" + shortURL;
+        return shortURL;
     }
 
     public void updateShortUrlByID(String shortURL, int urlId) {
@@ -94,7 +94,7 @@ public class URLServiceImpl implements IURLService {
                 System.out.println("Exception at : " +  element);
             }
         }
-        return "/" + longURL;
+        return longURL;
 
     }
 

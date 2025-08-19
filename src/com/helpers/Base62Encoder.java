@@ -1,7 +1,7 @@
 package com.helpers;
 
 public class Base62Encoder {
-    private static final String BASE62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String BASE62 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     public static String encode(long num) {
         StringBuilder str = new StringBuilder();
         while(num > 0) {
