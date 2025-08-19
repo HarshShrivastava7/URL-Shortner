@@ -1,7 +1,9 @@
 package com.services;
 
+import com.beans.URLMapping;
+
 public interface IURLService {
     public String createShortURL(String longURL);
-    public String generateLongURl(String shortURL);
-    public String deactivateShortURL(String shortURL);
+    public String findLongURl(String shortURL);
+    public void deactivateShortURL(String shortURL);
 }
