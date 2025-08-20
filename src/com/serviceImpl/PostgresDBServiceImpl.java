@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class URLDBServiceImpl implements IURLDBService {
+public class PostgresDBServiceImpl implements IURLDBService {
 
     Connection conn;
 

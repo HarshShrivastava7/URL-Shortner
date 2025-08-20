@@ -1,26 +1,28 @@
 package com.serviceImpl;
 
+import com.exception.URLException;
 import com.helpers.Base62Encoder;
-import com.helpers.ConnectionUtility;
-import com.helpers.RedisConnectionUtility;
+import com.services.IURLCacheService;
 import com.services.IURLDBService;
 import com.services.IURLService;
-import redis.clients.jedis.Jedis;
-
-import java.sql.*;
 
 public class URLServiceImpl implements IURLService {
 
-    URLDBServiceImpl urlDBService = new URLDBServiceImpl();
+    IURLDBService urlDBService = new PostgresDBServiceImpl();
+    IURLCacheService urlCacheService = new RedisServiceImpl();
+
     @Override
     public String createShortURL(String longURL) {
         String shortURL = "/harsh/";
         shortURL += Base62Encoder.encode(longURL);
+        if (urlDBService.selectLongUrl(shortURL) != null) {
+            throw new URLException("URL is already exist. Try again");
+        }
         if(urlDBService.insertIntoUrlMapping(shortURL, longURL)) {
             return shortURL;
         }
         else {
-            throw new RuntimeException("Error in inserting shortURL");
+            throw new URLException("Error in inserting shortURL");
         }
     }
 
@@ -29,10 +31,11 @@ public class URLServiceImpl implements IURLService {
     public String findLongURl(String shortURL) {
         String longURL = urlDBService.selectLongUrl(shortURL);
         if (longURL != null) {
+            urlCacheService.setCache(shortURL, 86400, longURL);
             return longURL;
         }
         else {
-            throw new RuntimeException("Invalid shortURL");
+            throw new URLException("Invalid shortURL");
         }
     }
 
