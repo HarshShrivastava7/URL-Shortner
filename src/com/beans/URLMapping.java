@@ -8,7 +8,6 @@ public class URLMapping {
     private long id;
     private boolean isActive = true;
     private LocalDate createdAt;
-    private LocalDate expiresAt;
     private long clicks;
 
     public boolean isActive() {
@@ -25,14 +24,6 @@ public class URLMapping {
 
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public LocalDate getExpiresAt() {
-        return expiresAt;
-    }
-
-    public void setExpiresAt(LocalDate expiresAt) {
-        this.expiresAt = expiresAt;
     }
 
     public long getClicks() {

@@ -1,5 +1,6 @@
 package com.controllers;
 
+import com.helpers.RedisRateLimiter;
 import com.serviceImpl.URLServiceImpl;
 import com.services.IURLService;
 
@@ -13,7 +14,8 @@ public class URLController {
         String longURL = sc.next();
 
         try {
-            System.out.println(urlService.createShortURL(longURL));
+            String shortURL = urlService.createShortURL(longURL);
+            System.out.println("Your short url is : " + shortURL);
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
