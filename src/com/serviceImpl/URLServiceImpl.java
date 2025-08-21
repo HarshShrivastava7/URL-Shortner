@@ -2,6 +2,7 @@ package com.serviceImpl;
 
 import com.exception.URLException;
 import com.helpers.Base62Encoder;
+import com.services.IURLAnalyticsService;
 import com.services.IURLCacheService;
 import com.services.IURLDBService;
 import com.services.IURLService;
@@ -10,6 +11,7 @@ public class URLServiceImpl implements IURLService {
 
     IURLDBService urlDBService = new PostgresDBServiceImpl();
     IURLCacheService urlCacheService = new RedisServiceImpl();
+    IURLAnalyticsService urlAnalyticsService = new RedisAnalyticsServiceImpl();
 
     @Override
     public String createShortURL(String longURL) {
@@ -29,7 +31,12 @@ public class URLServiceImpl implements IURLService {
 
     @Override
     public String findLongURl(String shortURL) {
-        String longURL = urlDBService.selectLongUrl(shortURL);
+        urlAnalyticsService.incrCounter(shortURL);
+        String longURL = urlCacheService.getCache(shortURL);
+        if (longURL != null) {
+            return longURL;
+        }
+        longURL = urlDBService.selectLongUrl(shortURL);
         if (longURL != null) {
             urlCacheService.setCache(shortURL, 86400, longURL);
             return longURL;

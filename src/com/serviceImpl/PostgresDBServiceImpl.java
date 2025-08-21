@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
 public class PostgresDBServiceImpl implements IURLDBService {
 
@@ -69,6 +70,30 @@ public class PostgresDBServiceImpl implements IURLDBService {
             pstmt.setString(2, shortURL);
             int rowsAffected = pstmt.executeUpdate();
             return  rowsAffected == 1;
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+            StackTraceElement[] trace = e.getStackTrace();
+            for (StackTraceElement element : trace) {
+                System.out.println("Exception at : " +  element);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addAnalytics(Map<String, Long> counters) {
+        conn = ConnectionUtility.getConnection();
+        String sql = "insert into url_analytics (short_url, count) values (?, ?) on conflict (short_url) do  update set count=url_analytics.count + EXCLUDED.count";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            for (Map.Entry<String, Long> entry : counters.entrySet()) {
+                pstmt.setString(1, entry.getKey());
+                pstmt.setLong(2, entry.getValue());
+                pstmt.addBatch();
+            }
+            int[] rowsAffected = pstmt.executeBatch();
+            return   rowsAffected.length != 0;
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());

@@ -6,6 +6,7 @@ import redis.clients.jedis.JedisPoolConfig;
 
 public class RedisConnectionUtility {
     private static JedisPool pool;
+    private static JedisPool analyticsPool;
 
     //initialize pool
 
@@ -19,6 +20,9 @@ public class RedisConnectionUtility {
             // connect to redis (default - localhost:6379
             pool = new JedisPool(config,"localhost", 6379);
             System.out.println("Redis Connection Successful");
+
+            //connect to redis (analytics - localhost:6380)
+            analyticsPool = new JedisPool(config,"localhost", 6380);
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -37,6 +41,18 @@ public class RedisConnectionUtility {
     public static void closePool() {
         if (pool != null) {
             pool.close();
+        }
+    }
+
+    //get analytics jedis resource
+    public static Jedis getAnalyticsConnection() {
+        return analyticsPool.getResource();
+    }
+
+    // close analytics pool or shutdown
+    public static void closeAnalyticsPool() {
+        if (analyticsPool != null) {
+            analyticsPool.close();
         }
     }
 }

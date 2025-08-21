@@ -8,9 +8,9 @@ public class RedisServiceImpl implements IURLCacheService {
     Jedis jedis;
 
     @Override
-    public boolean setCache(String key, long ttl, String value){
+    public void setCache(String key, long ttl, String value){
         jedis = RedisConnectionUtility.getConnection();
-        return jedis.setex(key, ttl, value).equalsIgnoreCase("ok");
+        jedis.setex(key, ttl, value);
     }
 
     @Override
